@@ -1,17 +1,17 @@
-import os
 import cv2
 import numpy as np
+import os
 from utils import overlay_frame, tqdm
 
-def background_subtraction(background_image, current_frame, threshold):
-  diff = current_frame.astype(np.float32) - background_image.astype(np.float32) # [-255,255]^3
+def three_frame_differencing(background_frame, current_frame, threshold):
+  diff = current_frame.astype(np.float32) - background_frame.astype(np.float32) # [-255,255]^3
   diff = np.abs(diff) / 255.0                                                   # [0,1]^3
   diff_intensity = np.sum(diff, axis=2)                                         # [0,3]
   diff_intensity = diff_intensity > threshold                                   # {0,1}
-  return diff_intensity.astype(np.uint8) * 255
+  return diff_intensity.astype(np.uint8) * 255  
 
-def background_subtraction_videos(input_video_path, folder, output_name):
-  print("Single Object Detection: Background Subtraction")
+def three_frame_differencing_videos(input_video_path, folder, output_name):
+  print("Single Object Detection: Three Frame Differencing")
 
   input_video = cv2.VideoCapture(input_video_path)
   width = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -29,17 +29,30 @@ def background_subtraction_videos(input_video_path, folder, output_name):
                                  fps=fps,
                                  frameSize=(width, height),
                                  isColor=False)
+  
 
-  frame_ok, background_frame = input_video.read()
+  frames = []
+  delay = 15
 
-  for _ in tqdm(range(frame_count)):
-    frame_ok, current_frame = input_video.read()
+  while True:
+    frame_ok, frame = input_video.read()
     if not frame_ok:
-        break
+      break
+    frames.append(frame)
 
-    detections = background_subtraction(background_frame, current_frame, 0.7)  
+  input_video.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
-    cv2.imshow("Background Subtraction", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
+  for frame_idx in tqdm(range(frame_count)):
+    frame_ok, current_frame = input_video.read()
+
+    past_frame = frames[max(frame_idx - delay, 0)]
+    future_frame = frames[min(frame_idx + delay, frame_count - 1)]
+
+    detections_past_frame = three_frame_differencing(past_frame, current_frame, 0.7)
+    detections_future_frame = three_frame_differencing(future_frame, current_frame, 0.7)
+    detections = np.bitwise_and(detections_past_frame, detections_future_frame)
+
+    cv2.imshow("Three frame differencing", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
     if cv2.waitKey(1) & 0xFF == ord('q'):
       break
 

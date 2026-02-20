@@ -11,6 +11,8 @@ def frame_differencing(background_frame, current_frame, threshold):
     return diff_intensity.astype(np.uint8) * 255  
 
 def frame_differencing_videos(input_video_path, folder, output_name):
+  print("Single Object Detection: Frame Differencing")
+
   input_video = cv2.VideoCapture(input_video_path)
   width = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))
   height = int(input_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -40,9 +42,15 @@ def frame_differencing_videos(input_video_path, folder, output_name):
       background_frame = current_frame.copy()
     
     detections = frame_differencing(background_frame, current_frame, 0.7)
+
+    cv2.imshow("Frame Differencing", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+      break
+
     video_writer.write(overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
     video_writer_mask.write(detections)
 
+  cv2.destroyAllWindows()
   input_video.release()
   video_writer.release()
   video_writer_mask.release()
