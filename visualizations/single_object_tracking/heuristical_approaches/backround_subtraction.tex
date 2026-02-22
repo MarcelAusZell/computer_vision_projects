@@ -1,0 +1,68 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc}
+
+\begin{document}
+\begin{tikzpicture}
+  % \draw[lightgray!40] (-0.3,-0.3) grid (18.3, 10.3);
+
+
+  \node[
+    draw,
+    circle,
+    fill=blue!20,
+    font=\Large,
+    minimum size=1cm,
+    inner sep=0pt,
+    align=center
+  ] (minus) at (5.5,6.5) {$-$};
+  
+  \node[
+    draw,
+    circle,
+    fill=blue!20,
+    font=\Large,
+    minimum size=1cm,
+    inner sep=0pt,
+    align=center
+  ] (abs) at (7.5,6.5) {$|\cdot|$};
+
+  \node[
+    draw,
+    circle,
+    fill=blue!20,
+    font=\Large,
+    minimum size=1cm,
+    inner sep=0pt,
+    align=center
+  ] (threshold) at (9.5,6.5) {T};
+
+  % Background Image
+  \node[inner sep=0, anchor=south west] (frame0)
+  at (0,1)
+  {\includegraphics[width=4cm]{pictures/input_0_frame.png}};
+
+  % Frame t
+  \node[inner sep=0, anchor=south west] (framet)
+  at (0,5)
+  {\includegraphics[width=4cm]{pictures/input_121_frame.png}};
+
+  % Background Differenced
+  \node[inner sep=0, anchor=south west] (maskt)
+  at (11,5)
+  {\includegraphics[width=4cm]{pictures/background_subtraction_mask_121_frame.png}};
+
+  % Connections
+  \draw[-{latex}, thick] (frame0.east) -| (minus.south);
+  \draw[-{latex}, thick] (framet.east) -- (minus.west);
+  \draw[-{latex}, thick] (minus.east) -- (abs.west);
+  \draw[-{latex}, thick] (abs.east) -- (threshold.west);
+  \draw[-{latex}, thick] (threshold.east) -- (maskt.west);
+
+  % Text nodes
+  \node (backgroundDescription) at ($(frame0.south) - (0,0.3)$) {\texttt{frame(0)}};
+  \node (backgroundDescription) at ($(framet.south) - (0,0.3)$) {\texttt{frame(t)}};
+  \node (backgroundDescription) at ($(maskt.south) - (0,0.3)$) {\texttt{mask(t)}};
+
+\end{tikzpicture}
+\end{document}
