@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { ROUTES } from "../../../routes/routes"
 
+
 const linkClass = ({ isActive }) =>
   isActive ? "bg-neutral/10" : ""
 
@@ -12,8 +13,13 @@ export default function SideBar() {
       <div className="min-h-full w-80 bg-base-200 shadow-2xl">
         <ul className="menu bg-base-200 rounded-box w-full">
           <li className="font-bold">
-            <NavLink to={ROUTES.home.path} className={linkClass}>
-              Computer Vision Classics
+            <NavLink to={ROUTES.home.path} > 
+
+              <img src="public/logo.svg"
+                alt=""
+                draggable="false"
+                width={300}
+              />
             </NavLink>
           </li>
 

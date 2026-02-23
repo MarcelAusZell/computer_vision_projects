@@ -6,7 +6,6 @@ export default function NavBar() {
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </label>
-      <span className="ml-2 font-bold">Computer Vision Classics</span>
     </nav>
   </>
 }
