@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef } from "react"
 
 export default function SyncedVideosRow({
   sources = [],
+  titles = [],
   n = sources.length,
-  gap = 16,
+  gap = 0,
+  width, // optional: number (px)
 }) {
   const refs = useRef([])
   const items = useMemo(() => sources.slice(0, n), [sources, n])
@@ -23,7 +25,7 @@ export default function SyncedVideosRow({
 
   const syncPlay = (leader) => {
     syncTime(leader)
-    withOthers(leader, (v) => v.play().catch(() => { }))
+    withOthers(leader, (v) => v.play().catch(() => {}))
   }
 
   const syncPause = (leader) => withOthers(leader, (v) => v.pause())
@@ -32,48 +34,51 @@ export default function SyncedVideosRow({
     const leader = refs.current[0]
     if (!leader) return
     syncTime(leader)
-    leader.play().catch(() => { })
-    withOthers(leader, (v) => v.play().catch(() => { }))
+    leader.play().catch(() => {})
+    withOthers(leader, (v) => v.play().catch(() => {}))
   }
 
-  // Start once videos are mounted (autoplay-safe because muted)
   useEffect(() => {
     startAll()
-    // if the browser delays loading, try again shortly after
     const t = setTimeout(startAll, 200)
     return () => clearTimeout(t)
   }, [items.length])
 
-return (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`,
-      gap,
-      width: "100%",
-    }}
-  >
-    {items.map((src, i) => (
-      <video
-        key={`${src}-${i}`}
-        ref={(el) => (refs.current[i] = el)}
-        muted
-        loop
-        playsInline
-        autoPlay
-        preload="auto"
+  return (
+    <div className="flex justify-center">
+      <div
+        className="grid w-full"
         style={{
-          width: "100%",
-          aspectRatio: "4 / 3",
-          height: "auto",
-          display: "block",
+          gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`,
+          gap,
+          ...(width ? { width } : {}),
         }}
-        onPlay={(e) => syncPlay(e.currentTarget)}
-        onPause={(e) => syncPause(e.currentTarget)}
-        onSeeked={(e) => syncTime(e.currentTarget)}
       >
-        <source src={src} type="video/mp4" />
-      </video>
-    ))}
-  </div>
-)}
+        {items.map((src, i) => (
+          <div key={`${src}-${i}`} className="flex flex-col">
+            <video
+              ref={(el) => (refs.current[i] = el)}
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="auto"
+              className="block w-full aspect-[4/3] h-auto"
+              onPlay={(e) => syncPlay(e.currentTarget)}
+              onPause={(e) => syncPause(e.currentTarget)}
+              onSeeked={(e) => syncTime(e.currentTarget)}
+            >
+              <source src={src} type="video/mp4" />
+            </video>
+
+            {titles[i] && (
+              <div className="mt-2 text-sm font-bold text-center">
+                {titles[i]}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
