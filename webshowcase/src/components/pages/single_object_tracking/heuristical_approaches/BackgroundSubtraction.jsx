@@ -1,5 +1,6 @@
 import SyncedVideosRow from "../../../../utils/synced_videos"
 import DisplayImage from "../../../../utils/display_image"
+import CodeBlock from "../../../../utils/display_code"
 
 export default function BackgroundSubtraction() {
   const base = import.meta.env.BASE_URL
@@ -10,7 +11,11 @@ export default function BackgroundSubtraction() {
         path="assets/pictures/single_object_tracking/heuristical_approaches/backround_subtraction.svg"
         width="80%"
       />
-
+      <CodeBlock
+        width="80%"
+        language="python"
+        code={`input_video = cv2.VideoCapture("./inputs.mp4")
+frame_ok, frame = input_video.read()`} />
       <SyncedVideosRow
         sources={[
           `${base}assets/videos/single_object_tracking/heuristical_approaches/input.mp4`,

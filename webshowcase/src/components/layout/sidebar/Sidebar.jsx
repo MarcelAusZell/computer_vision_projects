@@ -14,12 +14,7 @@ export default function SideBar() {
         <ul className="menu bg-base-200 rounded-box w-full">
           <li className="font-bold">
             <NavLink to={ROUTES.home.path} > 
-
-              <img src="public/logo.svg"
-                alt=""
-                draggable="false"
-                width={300}
-              />
+              Computer Vision Projects
             </NavLink>
           </li>
 
