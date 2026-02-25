@@ -3,7 +3,7 @@ import { ROUTES } from "../../../routes/routes"
 
 
 const linkClass = ({ isActive }) =>
-  isActive ? "bg-neutral/10" : ""
+  isActive ? "bg-neutral text-white shadow-md" : ""
 
 export default function SideBar() {
   return (
