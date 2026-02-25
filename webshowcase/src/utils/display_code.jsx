@@ -35,11 +35,11 @@ export default function CodeBlock({
       >
         <button
           onClick={handleCopy}
-          className="absolute -top-5 right-0 flex items-center justify-center text-xs text-neutral/50 px-3 border-3 border-base-300 border-b-0 rounded-t-xl bg-base-100 font-bold pt-1 cursor-pointer"        >
+          className="absolute bottom-2 right-0 flex items-center justify-center text-xs text-neutral/30 px-3 overflow-hidden rounded-t-xl border-tr-none font-bold pt-1 cursor-pointer"        >
           {copied ? "Copied" : "Copy"}
         </button>
 
-        <pre className="overflow-auto border-3 border-base-300 rounded-xl rounded-tr-none bg-base-200">
+        <pre className="overflow-auto border-3 border-base-300  rounded-md bg-base-200">
           <code ref={codeRef} className={`language-${language}`}>
             {code}
           </code>

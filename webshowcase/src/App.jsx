@@ -25,11 +25,10 @@ export default function App() {
       <div className="drawer-content h-screen overflow-y-auto scroll-smooth">
         <NavBar />
 
-        <div className="px-4 py-6 lg:px-16 lg:py-12 max-w-6xl mx-auto">
+        <div className="px-4 py-6 lg:px-40 lg:py-12 max-w-6xl mx-auto">
           <Routes>
             <Route path={ROUTES.home.path} element={<Home/>} />
 
-            {/* Optional: redirect old short URLs to new structured URLs */}
             <Route
               path="/background-subtraction"
               element={<Navigate to={ROUTES.backgroundSubtraction.path} replace />}

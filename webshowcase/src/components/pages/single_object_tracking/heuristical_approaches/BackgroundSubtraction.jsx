@@ -1,6 +1,8 @@
 import SyncedVideosRow from "../../../../utils/synced_videos"
 import DisplayImage from "../../../../utils/display_image"
 import CodeBlock from "../../../../utils/display_code"
+import Latex from "../../../../utils/diplay_latex"
+
 
 export default function BackgroundSubtraction() {
   const base = import.meta.env.BASE_URL
@@ -9,12 +11,13 @@ export default function BackgroundSubtraction() {
     <>
       <DisplayImage
         path="assets/pictures/single_object_tracking/heuristical_approaches/backround_subtraction.svg"
-        width="80%"
+        width="100%"
       />
       <CodeBlock
-        width="80%"
+        width="100%"
         language="python"
-        code={`input_video = cv2.VideoCapture("./inputs.mp4")
+        code={`import cv2
+input_video = cv2.VideoCapture("./inputs.mp4")
 frame_ok, frame = input_video.read()`} />
       <SyncedVideosRow
         sources={[
@@ -25,8 +28,23 @@ frame_ok, frame = input_video.read()`} />
         titles={["Input Video", "Mask", "Mask overlayed"]}
         n={3}
         gap={0}
-        width="80%"
+        width="100%"
       />
+
+      <div className="mt-3">
+        <Latex>
+          {"\\text{Attention}(\\mathbf{Q},\\mathbf{K},\\mathbf{V}) = " +
+            "\\text{softmax}\\left(" +
+            "\\frac{\\mathbf{QK}^\\top}{\\sqrt{d_k}}" +
+            "\\right)\\mathbf{V}"}
+        </Latex>
+        <Latex block>
+          {"\\text{Attention}(\\mathbf{Q},\\mathbf{K},\\mathbf{V}) = " +
+            "\\text{softmax}\\left(" +
+            "\\frac{\\mathbf{QK}^\\top}{\\sqrt{d_k}}" +
+            "\\right)\\mathbf{V}"}
+        </Latex>
+      </div>
     </>
   )
 }
