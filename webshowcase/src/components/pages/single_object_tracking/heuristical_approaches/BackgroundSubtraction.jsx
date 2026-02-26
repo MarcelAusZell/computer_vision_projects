@@ -1,4 +1,4 @@
-import SyncedVideosRow from "../../../../utils/synced_videos"
+import DisplayVideo from "../../../../utils/display_video"
 import DisplayImage from "../../../../utils/display_image"
 import CodeBlock from "../../../../utils/display_code"
 import Latex from "../../../../utils/diplay_latex"
@@ -19,15 +19,13 @@ export default function BackgroundSubtraction() {
         code={`import cv2
 input_video = cv2.VideoCapture("./inputs.mp4")
 frame_ok, frame = input_video.read()`} />
-      <SyncedVideosRow
-        sources={[
-          `${base}assets/videos/single_object_tracking/heuristical_approaches/input.mp4`,
-          `${base}assets/videos/single_object_tracking/heuristical_approaches/background_subtraction_mask.mp4`,
+
+
+      <DisplayVideo
+        source={[
           `${base}assets/videos/single_object_tracking/heuristical_approaches/background_subtraction.mp4`,
         ]}
-        titles={["Input Video", "Mask", "Mask overlayed"]}
-        n={3}
-        gap={0}
+        title="Background Subtraction"
         width="100%"
       />
 

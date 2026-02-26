@@ -10,7 +10,7 @@ export default function SideBar() {
     <div className="drawer-side">
       <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
-      <div className="min-h-full w-80 bg-base-200 shadow-2xl">
+      <div className="min-h-full w-80 bg-base-200 shadow-2xl px-2">
         <ul className="menu bg-base-200 rounded-box w-full">
           <li className="font-bold">
             <NavLink to={ROUTES.home.path} > 

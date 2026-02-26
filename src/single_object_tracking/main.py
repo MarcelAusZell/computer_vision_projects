@@ -25,10 +25,10 @@ def main():
     # background_subtraction_videos(input_video_path=input_video_path, folder="videos", output_name="background_subtraction")
     # frame_differencing_videos(input_video_path=input_video_path, folder="videos", output_name="frame_differencing")
     # three_frame_differencing_videos(input_video_path=input_video_path, folder="videos", output_name="three_frame_differencing")
-    # single_gaussian_videos(input_video_path=input_video_path, folder="videos", output_name="single_gaussian")
-    get_t_th_frame(os.path.join("videos", "input.mp4"),0)
-    get_t_th_frame(os.path.join("videos", "input.mp4"),121)
-    get_t_th_frame(os.path.join("videos", "background_subtraction_mask.mp4"),121)
+    single_gaussian_videos(input_video_path=input_video_path, folder="videos", output_name="single_gaussian")
+    # get_t_th_frame(os.path.join("videos", "input.mp4"),0)
+    # get_t_th_frame(os.path.join("videos", "input.mp4"),121)
+    # get_t_th_frame(os.path.join("videos", "background_subtraction_mask.mp4"),121)
 
 if __name__ == "__main__":
     main()

@@ -22,13 +22,9 @@ def background_subtraction_videos(input_video_path, folder, output_name):
   video_writer = cv2.VideoWriter(filename=os.path.join(folder, output_name + ".mp4"),
                                  fourcc=cv2.VideoWriter_fourcc(*"avc1"),
                                  fps=fps,
-                                 frameSize=(width, height),
+                                 frameSize=(3 * width, height),
                                  isColor=True)
-  video_writer_mask = cv2.VideoWriter(filename=os.path.join(folder, output_name + "_mask.mp4"),
-                                 fourcc=cv2.VideoWriter_fourcc(*"avc1"),
-                                 fps=fps,
-                                 frameSize=(width, height),
-                                 isColor=False)
+
 
   frame_ok, background_frame = input_video.read()
 
@@ -37,16 +33,12 @@ def background_subtraction_videos(input_video_path, folder, output_name):
     if not frame_ok:
         break
 
-    detections = background_subtraction(background_frame, current_frame, 0.7)  
-
-    # cv2.imshow("Background Subtraction", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #   break
-
-    video_writer.write(overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    video_writer_mask.write(detections)
+    detections = background_subtraction(background_frame, current_frame, 0.7)
+    stacked = np.hstack((current_frame,
+                         np.stack([detections] * 3, axis=-1),    
+                         overlay_frame(current_frame, detections, [0, 0, 255], 0.6)))
+    video_writer.write(stacked)
 
   cv2.destroyAllWindows()
   input_video.release()
   video_writer.release()
-  video_writer_mask.release()

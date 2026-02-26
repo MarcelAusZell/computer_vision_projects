@@ -20,15 +20,9 @@ def single_gaussian_videos(input_video_path, folder, output_name):
     filename=os.path.join(folder, output_name + ".mp4"),
     fourcc=cv2.VideoWriter_fourcc(*"avc1"),
     fps=fps,
-    frameSize=(width, height),
+    frameSize=(3 * width, height),
     isColor=True,
   )
-
-  video_writer_mask = cv2.VideoWriter(filename=os.path.join(folder, output_name + "_mask.mp4"),
-                                fourcc=cv2.VideoWriter_fourcc(*"avc1"),
-                                fps=fps,
-                                frameSize=(width, height),
-                                isColor=False)
 
   N = 100
   first_N_frames = []
@@ -44,23 +38,18 @@ def single_gaussian_videos(input_video_path, folder, output_name):
   mean = first_N_frames.mean(axis=0)
   variance = first_N_frames.var(axis=0)
 
-  for frame_idx in tqdm(range(frame_count)):
+  for _ in tqdm(range(frame_count)):
     frame_ok, current_frame = input_video.read()
     if not frame_ok:
       break
 
     frame_intensities = cv2.cvtColor(current_frame, cv2.COLOR_BGR2GRAY)
-    detections = pixel_classification_for_frame(frame_intensities, mean, variance, 15)
-    video_writer.write(overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    video_writer_mask.write(detections)
-
-    # cv2.imshow("Single Gaussian", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #   break
+    detections = pixel_classification_for_frame(frame_intensities, mean, variance, 25)
+    stacked = np.hstack((current_frame, np.stack(3 * [detections], axis=-1), overlay_frame(current_frame, detections, [0, 0, 255], 0.6)))
+    video_writer.write(stacked)
 
   cv2.destroyAllWindows()
   input_video.release()
   video_writer.release()
-  video_writer_mask.release()
 
 

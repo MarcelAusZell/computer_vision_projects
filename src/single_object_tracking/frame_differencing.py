@@ -22,13 +22,8 @@ def frame_differencing_videos(input_video_path, folder, output_name):
   video_writer = cv2.VideoWriter(filename=os.path.join(folder, output_name + ".mp4"),
                                  fourcc=cv2.VideoWriter_fourcc(*"avc1"),
                                  fps=fps,
-                                 frameSize=(width, height),
+                                 frameSize=(3 * width, height),
                                  isColor=True)
-  video_writer_mask = cv2.VideoWriter(filename=os.path.join(folder, output_name + "_mask.mp4"),
-                                 fourcc=cv2.VideoWriter_fourcc(*"avc1"),
-                                 fps=fps,
-                                 frameSize=(width, height),
-                                 isColor=False)
   
   frame_ok, background_frame = input_video.read()
   stepsize_difference = 3
@@ -40,17 +35,13 @@ def frame_differencing_videos(input_video_path, folder, output_name):
     
     if frame_idx % stepsize_difference == 0:
       background_frame = current_frame.copy()
-    
+
     detections = frame_differencing(background_frame, current_frame, 0.7)
-
-    # cv2.imshow("Frame Differencing", overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #   break
-
-    video_writer.write(overlay_frame(current_frame, detections, [0, 0, 255], 0.6))
-    video_writer_mask.write(detections)
+    stacked = np.hstack((current_frame,
+                         np.stack([detections]*3, axis=-1),
+                         overlay_frame(current_frame, detections, [0, 0, 255], 0.6)))
+    video_writer.write(stacked)
 
   cv2.destroyAllWindows()
   input_video.release()
   video_writer.release()
-  video_writer_mask.release()

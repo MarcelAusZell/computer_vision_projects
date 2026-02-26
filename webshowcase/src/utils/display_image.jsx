@@ -10,8 +10,11 @@ export default function DisplayImage({
         src={`${base}${path}`}
         alt=""
         draggable="false"
+        loading="lazy"
+        decoding="async"
         className={width ? undefined : "w-full"}
         style={width ? { width } : undefined}
+        
       />
     </div>
   )
